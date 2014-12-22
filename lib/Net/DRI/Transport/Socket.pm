@@ -462,6 +462,13 @@ sub try_again
   return 1; ## we will retry
  }
 
+ ## Experimental try_again on SSL/TCP timeout
+ if ($step==1 && $istimeout==1 && $self->transport_data()->{socktype} ne 'udp')
+ {
+  $self->log_output('debug','transport',$ctx,{phase=>'active',message=>sprintf('In try_again, currently: pause=%f timeout=%f',$$rpause,$$rtimeout)});
+  return 1;
+ }
+
  return 0; ## we do not handle other cases, hence no retry and fatal error
 }
 
