@@ -374,6 +374,7 @@ lib/Net/DRI/Protocol/EPP/Extensions/TCI/Registrar.pm
 lib/Net/DRI/Protocol/EPP/Extensions/TCI_gTLD.pm
 lib/Net/DRI/Protocol/EPP/Extensions/TCI_gTLD/Contact.pm
 lib/Net/DRI/Protocol/EPP/Extensions/TCI_gTLD/Domain.pm
+lib/Net/DRI/Protocol/EPP/Extensions/TCI_gTLD/Message.pm
 lib/Net/DRI/Protocol/EPP/Extensions/Telnic.pm
 lib/Net/DRI/Protocol/EPP/Extensions/UNIREG.pm
 lib/Net/DRI/Protocol/EPP/Extensions/UNIREG/Centric.pm

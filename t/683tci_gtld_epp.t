@@ -46,8 +46,15 @@ $co->pc(['107140']);
 $co->cc(['RU']);
 $co->auth({pw=>'EujGiCwW5UwzikUw'});
 # Extension
-my $legalAddr = { street=>['ая 101'], city=>'Москва',sp=>'Москва',pc=>'107140',cc=>'RU'} ;
-$co->organization({legalAddr=>$legalAddr,TIN=>$tin});
+%legalAddr = (legalAddr=>
+                {
+                  street=>([['ая 101']]),
+                  city=>(['Москва']),
+                  sp=>(['Москва']),
+                  pc=>(['107140']),
+                  cc=>(['RU'])
+                });
+$co->organization({%legalAddr,TIN=>$tin});
 $R2='';
 $rc=$dri->contact_create($co);
 is_string($R1,$E1.'<command><create><contact:create xmlns:contact="urn:ietf:params:xml:ns:contact-1.0" xsi:schemaLocation="urn:ietf:params:xml:ns:contact-1.0 contact-1.0.xsd"><contact:id>h3PA2YBl-vrdev</contact:id><contact:postalInfo type="loc"><contact:name>ООО ААА</contact:name><contact:org>ООО ААА</contact:org><contact:addr><contact:street>ая 101</contact:street><contact:street/><contact:street/><contact:city>Москва</contact:city><contact:sp>Москва</contact:sp><contact:pc>107140</contact:pc><contact:cc>RU</contact:cc></contact:addr></contact:postalInfo><contact:voice>+7.4951241438</contact:voice><contact:email>someone@tcinet.ru</contact:email><contact:authInfo><contact:pw>EujGiCwW5UwzikUw</contact:pw></contact:authInfo></contact:create></create><extension><contact:create xmlns:contact="http://www.tcinet.ru/epp/tci-contact-ext-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.tcinet.ru/epp/tci-contact-ext-1.0 tci-contact-ext-1.0.xsd"><contact:organization><contact:legalAddr type="loc"><contact:street>ая 101</contact:street><contact:city>Москва</contact:city><contact:sp>Москва</contact:sp><contact:pc>107140</contact:pc><contact:cc>RU</contact:cc></contact:legalAddr><contact:TIN>123456789</contact:TIN></contact:organization></contact:create></extension><clTRID>ABC-12345</clTRID></command>'.$E2,'contact_create for a legal entity build');
@@ -87,22 +94,28 @@ is_string($R1,$E1.'<command><update><contact:update xmlns:contact="urn:ietf:para
 is($rc->is_success(),1,'contact_update (change element) for an individual is_success');
 
 # update organization contact (add element)
-$legalAddr = { street=>['ул. Примерная,','д. 98',''], city=>'Москва', pc=>'123456', cc=> 'ru' };
+%legalAddr = (legalAddr=>
+                {
+                  street=>([['ул. Примерная,','д. 98',''],['98,','Primernaya st.','']]),
+                  city=>(['Москва','Моsсow']),
+                  pc=>(['123456','123456']),
+                  cc=>(['ru','ru'])
+                });
 $c = $dri->local_object('contact')->srid('CLDC2');
-$c->organization({legalAddr=>$legalAddr,TIN=>1234567890});
+$c->organization({%legalAddr,TIN=>1234567890});
 $toc = $dri->local_object('changes');
 $toc->add('status',$dri->local_object('status')->no('delete'));
 $rc = $dri->contact_update($c,$toc);
-is_string($R1,$E1.'<command><update><contact:update xmlns:contact="urn:ietf:params:xml:ns:contact-1.0" xsi:schemaLocation="urn:ietf:params:xml:ns:contact-1.0 contact-1.0.xsd"><contact:id>CLDC2</contact:id><contact:add><contact:status s="clientDeleteProhibited"/></contact:add></contact:update></update><extension><contact:update xmlns:contact="http://www.tcinet.ru/epp/tci-contact-ext-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.tcinet.ru/epp/tci-contact-ext-1.0 tci-contact-ext-1.0.xsd"><contact:chg><contact:organization><contact:legalAddr type="loc"><contact:street>ул. Примерная,</contact:street><contact:street>д. 98</contact:street><contact:street/><contact:city>Москва</contact:city><contact:pc>123456</contact:pc><contact:cc>ru</contact:cc></contact:legalAddr><contact:TIN>1234567890</contact:TIN></contact:organization></contact:chg></contact:update></extension><clTRID>ABC-12345</clTRID></command>'.$E2,'contact_update (add element) for a organization build');
+is_string($R1,$E1.'<command><update><contact:update xmlns:contact="urn:ietf:params:xml:ns:contact-1.0" xsi:schemaLocation="urn:ietf:params:xml:ns:contact-1.0 contact-1.0.xsd"><contact:id>CLDC2</contact:id><contact:add><contact:status s="clientDeleteProhibited"/></contact:add></contact:update></update><extension><contact:update xmlns:contact="http://www.tcinet.ru/epp/tci-contact-ext-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.tcinet.ru/epp/tci-contact-ext-1.0 tci-contact-ext-1.0.xsd"><contact:chg><contact:organization><contact:legalAddr type="loc"><contact:street>ул. Примерная,</contact:street><contact:street>д. 98</contact:street><contact:street/><contact:city>Москва</contact:city><contact:pc>123456</contact:pc><contact:cc>ru</contact:cc></contact:legalAddr><contact:legalAddr type="int"><contact:street>98,</contact:street><contact:street>Primernaya st.</contact:street><contact:city>Моsсow</contact:city><contact:pc>123456</contact:pc><contact:cc>ru</contact:cc></contact:legalAddr><contact:TIN>1234567890</contact:TIN></contact:organization></contact:chg></contact:update></extension><clTRID>ABC-12345</clTRID></command>'.$E2,'contact_update (add element) for a organization build');
 is($rc->is_success(),1,'contact_update (add element) for a organization is_success');
 
 # update organization contact (remove element)
 $c = $dri->local_object('contact')->srid('CLDC2');
-$c->organization({legalAddr=>$legalAddr,TIN=>1234567890});
+$c->organization({%legalAddr,TIN=>1234567890});
 $toc = $dri->local_object('changes');
 $toc->del('status',$dri->local_object('status')->no('delete'));
 $rc = $dri->contact_update($c,$toc);
-is_string($R1,$E1.'<command><update><contact:update xmlns:contact="urn:ietf:params:xml:ns:contact-1.0" xsi:schemaLocation="urn:ietf:params:xml:ns:contact-1.0 contact-1.0.xsd"><contact:id>CLDC2</contact:id><contact:rem><contact:status s="clientDeleteProhibited"/></contact:rem></contact:update></update><extension><contact:update xmlns:contact="http://www.tcinet.ru/epp/tci-contact-ext-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.tcinet.ru/epp/tci-contact-ext-1.0 tci-contact-ext-1.0.xsd"><contact:chg><contact:organization><contact:legalAddr type="loc"><contact:street>ул. Примерная,</contact:street><contact:street>д. 98</contact:street><contact:street/><contact:city>Москва</contact:city><contact:pc>123456</contact:pc><contact:cc>ru</contact:cc></contact:legalAddr><contact:TIN>1234567890</contact:TIN></contact:organization></contact:chg></contact:update></extension><clTRID>ABC-12345</clTRID></command>'.$E2,'contact_update (remove element) for a organization build');
+is_string($R1,$E1.'<command><update><contact:update xmlns:contact="urn:ietf:params:xml:ns:contact-1.0" xsi:schemaLocation="urn:ietf:params:xml:ns:contact-1.0 contact-1.0.xsd"><contact:id>CLDC2</contact:id><contact:rem><contact:status s="clientDeleteProhibited"/></contact:rem></contact:update></update><extension><contact:update xmlns:contact="http://www.tcinet.ru/epp/tci-contact-ext-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.tcinet.ru/epp/tci-contact-ext-1.0 tci-contact-ext-1.0.xsd"><contact:chg><contact:organization><contact:legalAddr type="loc"><contact:street>ул. Примерная,</contact:street><contact:street>д. 98</contact:street><contact:street/><contact:city>Москва</contact:city><contact:pc>123456</contact:pc><contact:cc>ru</contact:cc></contact:legalAddr><contact:legalAddr type="int"><contact:street>98,</contact:street><contact:street>Primernaya st.</contact:street><contact:city>Моsсow</contact:city><contact:pc>123456</contact:pc><contact:cc>ru</contact:cc></contact:legalAddr><contact:TIN>1234567890</contact:TIN></contact:organization></contact:chg></contact:update></extension><clTRID>ABC-12345</clTRID></command>'.$E2,'contact_update (remove element) for a organization build');
 is($rc->is_success(),1,'contact_update (remove element) for a organization is_success');
 
 #####################

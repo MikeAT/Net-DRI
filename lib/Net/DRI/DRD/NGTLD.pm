@@ -1050,10 +1050,10 @@ moscow tatar xn--d1acj3b xn--1-7sbc5ceg xn--2-7sbc5ceg  xn--80adxhks
 =cut
 
  return {
-     bep_type => 1, # dedicated registy
+     bep_type => 1,
+     contact_i18n => 3,
      tlds => ['moscow', 'tatar', 'xn--d1acj3b', 'xn--1-7sbc5ceg', 'xn--2-7sbc5ceg', 'xn--80adxhks'],
-     contact_i18n => 7, # and or ?
-     factories => [ {'object'=>'contact','factory' => sub { return Net::DRI::Data::Contact::TCI_gTLD->new(@_); } } ],
+     # TCI cctlds has Contact Object and Extensions Object, these may be required
      transport_protocol_default => ['Net::DRI::Transport::Socket',{},'Net::DRI::Protocol::EPP::Extensions::TCI_gTLD',{}],
    } if $bep eq 'tci';
 

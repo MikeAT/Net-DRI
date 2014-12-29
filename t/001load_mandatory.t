@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 456;
+use Test::More tests => 457;
 
 BEGIN {
 use_ok('Net::DRI');
@@ -337,6 +337,7 @@ use_ok('Net::DRI::Protocol::EPP::Extensions::TCI::Message');
 use_ok('Net::DRI::Protocol::EPP::Extensions::TCI_gTLD');
 use_ok('Net::DRI::Protocol::EPP::Extensions::TCI_gTLD::Contact');
 use_ok('Net::DRI::Protocol::EPP::Extensions::TCI_gTLD::Domain');
+use_ok('Net::DRI::Protocol::EPP::Extensions::TCI_gTLD::Message');
 use_ok('Net::DRI::Protocol::EPP::Extensions::TCI::Registrar');
 use_ok('Net::DRI::Protocol::EPP::Extensions::CloudRegistry');
 use_ok('Net::DRI::Protocol::EPP::Extensions::CloudRegistry::LaunchPhase');
